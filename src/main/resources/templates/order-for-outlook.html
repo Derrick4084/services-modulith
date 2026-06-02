@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Confirmation</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f7;
+            font-family: Arial, sans-serif;
+        }
+
+        .wrapper {
+            width: 100%;
+            padding: 20px 0;
+            background-color: #f4f4f7;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        /* Branding Header */
+        .brand-header {
+            background: #ffffff;
+            text-align: center;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .brand-header img {
+            max-width: 140px;
+            height: auto;
+        }
+
+        .header {
+            background: #064b97;
+            color: #ffffff;
+            text-align: center;
+            padding: 16px;
+            font-size: 20px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        .content {
+            padding: 20px;
+            color: #333;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .table th {
+            background: #f8f8f8;
+            text-align: left;
+            padding: 10px;
+            border: 1px solid #ddd;
+            font-size: 13px;
+        }
+
+        .table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            font-size: 13px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .total {
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #064b97;
+        }
+
+        .footer {
+            background: #f8f8f8;
+            text-align: center;
+            padding: 20px;
+            font-size: 12px;
+            color: #888;
+        }
+
+        .footer a {
+            color: #064b97;
+            text-decoration: none;
+            margin: 0 8px;
+        }
+
+        @media only screen and (max-width: 600px) {
+            .container {
+                width: 100% !important;
+                border-radius: 0;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+<div class="wrapper">
+    <div class="container">
+
+        <!-- Title Bar -->
+        <div class="header">
+            Order Confirmation
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <p>Hi <strong th:text="${customerName}"></strong>,</p>
+
+            <p>
+                Thanks for your order! We're getting everything ready for you.
+            </p>
+
+            <p>
+                <strong>Order Reference:</strong>
+                <span th:text="${orderReference}"></span>
+            </p>
+
+            <!-- Table -->
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Product</th>
+                    <th class="text-center">Qty</th>
+                    <th class="text-right">Price</th>
+                    <th class="text-right">Total</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="product : ${products}">
+                    <td th:text="${product.productName}"></td>
+                    <td class="text-center"
+                        th:text="${#numbers.formatDecimal(product.quantity, 0, 0)}"></td>
+                    <td class="text-right"
+                        th:text="${#numbers.formatCurrency(product.price)}"></td>
+                    <td class="text-right"
+                        th:text="${#numbers.formatCurrency(product.lineTotal)}"></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <!-- Total -->
+            <p class="total">
+                Total Amount:
+                <span th:text="${#numbers.formatCurrency(totalAmount)}"></span>
+            </p>
+
+            <p>
+                If you have any questions, feel free to reach out to our support team.
+            </p>
+
+            <p>
+                Thanks for choosing <strong>DeroCode</strong>.
+            </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>This is an automated email. Please do not reply.</p>
+
+            <p>
+                <a href="#">Website</a> |
+                <a href="#">Support</a> |
+                <a href="#">Contact</a>
+            </p>
+
+            <p>&copy; 2026 DeroCode. All rights reserved.</p>
+        </div>
+
+    </div>
+
+</div>
+</body>
+</html>
