@@ -43,16 +43,16 @@ import java.util.concurrent.TimeUnit;
 )
 public class ProdNotificationMongoClientConfig {
 
-    @Value("${password}")
+    @Value("${documentdb.password}")
     private String docDbPassword;
 
-    @Value("${username}")
+    @Value("${documentdb.username}")
     private String docDbUserName;
 
-    @Value("${notification_endpoint}")
+    @Value("${documentdb.documentdb_endpoint}")
     private String docDbHost;
 
-    @Value("${port}")
+    @Value("${documentdb.port}")
     private int docDbPort;
 
     @Bean(name = "notificationMongoClient")
