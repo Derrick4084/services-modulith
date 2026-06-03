@@ -13,16 +13,16 @@ import java.util.Properties;
 @Configuration
 @Profile("prod")
 public class ProdJavaMailConfig {
-    @Value("${mail.host}")
+    @Value("${dev.mail.host}")
     private String host;
 
-    @Value("${mail.smtp-port}")
+    @Value("${dev.mail.port}")
     private int port;
 
-    @Value("${mail.username}")
+    @Value("${dev.mail.username}")
     private String username;
 
-    @Value("${mail.password}")
+    @Value("${dev.mail.password}")
     private String password;
 
     @Bean
