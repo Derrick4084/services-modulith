@@ -16,7 +16,7 @@ public class ProdJavaMailConfig {
     @Value("${mail.host}")
     private String host;
 
-    @Value("${smtp.port}")
+    @Value("${mail.smtp-port}")
     private int port;
 
     @Value("${mail.username}")
