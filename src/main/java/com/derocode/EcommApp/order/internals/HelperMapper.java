@@ -2,7 +2,7 @@ package com.derocode.EcommApp.order.internals;
 
 import com.derocode.EcommApp.enums.OrderStatus;
 import com.derocode.EcommApp.enums.PaymentMethod;
-import com.derocode.EcommApp.order.internals.OrderLineDto;
+import com.derocode.EcommApp.order.OrderLineDto;
 import lombok.NonNull;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;

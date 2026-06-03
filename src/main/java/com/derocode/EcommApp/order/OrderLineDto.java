@@ -1,4 +1,4 @@
-package com.derocode.EcommApp.order.internals;
+package com.derocode.EcommApp.order;
 
 import java.math.BigDecimal;
 

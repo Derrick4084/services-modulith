@@ -47,6 +47,7 @@ public class ShipmentServiceImpl {
                     .shipmentMethod(shipmentMethod)
                     .carrier(ShipmentCarrier.FEDEX)
                     .status(ShipmentStatus.SHIPPED)
+                    .shippedAt(LocalDateTime.now())
                     .trackingNumber(java.util.UUID.randomUUID().toString().split("-")[0])
                     .build();
             shipment.setEstimatedDeliveryDate(LocalDate.now().plusDays(shipment.getShipmentMethod().getAddedDays()));

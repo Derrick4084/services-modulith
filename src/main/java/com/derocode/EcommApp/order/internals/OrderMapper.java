@@ -4,6 +4,7 @@ package com.derocode.EcommApp.order.internals;
 
 import com.derocode.EcommApp.customer.CustomerResponseDto;
 import com.derocode.EcommApp.events.OrderEventDto;
+import com.derocode.EcommApp.order.OrderLineDto;
 import com.derocode.EcommApp.order.OrderResponseDto;
 import org.jspecify.annotations.NonNull;
 import org.mapstruct.CollectionMappingStrategy;

@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 public class OrderLine {
     @Id
     @Column(name = "ID", unique = true, nullable = false)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

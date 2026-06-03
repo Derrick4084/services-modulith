@@ -11,6 +11,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 
@@ -33,6 +34,7 @@ public class OrderServiceImpl
             Order order = orderRepository.findById(event.orderId()).orElseThrow(() ->
                     new RuntimeException("Order not found for this shipment"));
             order.setStatus(OrderStatus.COMPLETE);
+            order.setUpdatedAt(LocalDateTime.now());
             orderRepository.save(order);
         }
     }
