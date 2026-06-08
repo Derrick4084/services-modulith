@@ -5,4 +5,6 @@ public interface CustomerFacade {
     CustomerResponseDto getCustomerByEmail(String email);
 
     CustomerResponseDto addNewCustomer(AddCustomerRequestDto addCustomerRequestDto);
+
+    Boolean existsByEmail(String email);
 }

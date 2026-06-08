@@ -10,6 +10,6 @@ public interface ProductFacade {
 
     ProductResponseDto addNewProduct(AddProductRequestDto addProductRequest);
 
-    List<ProductResponseDto> getAvailableProducts(List<ProductOrderRequestDto> products);
+    List<ProductResponseDto> getAvailableProducts(List<ProductOrderRequestDto> products, Long orderId);
 }
 

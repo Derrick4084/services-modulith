@@ -5,8 +5,9 @@ package com.derocode.EcommApp.notification.internals;
 import com.derocode.EcommApp.events.OrderEventDto;
 import com.derocode.EcommApp.events.PaymentEventDto;
 import com.derocode.EcommApp.events.ShipmentEventDto;
-import jakarta.persistence.Id;
+
 import lombok.*;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 

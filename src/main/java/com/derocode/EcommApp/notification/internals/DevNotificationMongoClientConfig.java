@@ -33,7 +33,6 @@ import java.util.List;
 )
 public class DevNotificationMongoClientConfig {
 
-
     @Bean(name = "notificationMongoClient")
     public MongoClient mongoClient() {
 

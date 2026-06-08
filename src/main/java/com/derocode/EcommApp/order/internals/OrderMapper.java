@@ -41,7 +41,7 @@ public interface OrderMapper {
     }
 
 
-    default OrderEventDto orderToOrderEvent(@NonNull Order order, @NonNull CustomerResponseDto customer) {
+    default OrderEventDto orderToOrderEvent(@NonNull Order order) {
         List<OrderLineDto> orderItems = order.getOrderLines().stream().map(ol->
                 new OrderLineDto(
                         ol.getProductId(),
@@ -57,7 +57,8 @@ public interface OrderMapper {
                 order.getTotalAmount(),
                 order.getPaymentMethod().name(),
                 order.getOrderDate(),
-                customer.email()
+                order.getCustomerEmail()
+
         );
     }
 
