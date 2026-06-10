@@ -1,17 +1,17 @@
-package com.derocode.EcommApp.customer.configs;
+package com.derocode.EcommApp.notification.configs;
 
-import com.derocode.EcommApp.customer.models.Customer;
+
 import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.MongoDatabaseFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoClientDatabaseFactory;
@@ -19,7 +19,6 @@ import org.springframework.data.mongodb.core.convert.DefaultDbRefResolver;
 import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
-import org.springframework.data.mongodb.core.index.Index;
 import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
@@ -27,12 +26,14 @@ import java.util.List;
 
 @Profile("dev")
 @Configuration
+@Slf4j
 @EnableMongoRepositories(
-        basePackages = "com.derocode.EcommApp.customer.repositories",
-        mongoTemplateRef = "customerMongoTemplate"
+        basePackages = "com.derocode.EcommApp.notification.repository",
+        mongoTemplateRef = "notificationMongoTemplate"
 )
-public class DevCustomerMongoClientConfig {
-    @Bean(name = "customerMongoClient")
+public class DevNotificationMongoClientConfig {
+
+    @Bean(name = "notificationMongoClient")
     public MongoClient mongoClient() {
 
         MongoCredential credential =
@@ -59,49 +60,43 @@ public class DevCustomerMongoClientConfig {
         );
     }
 
-    @Bean(name = "customerMongoDatabaseFactory")
-    public MongoDatabaseFactory mongoDatabaseFactory(@Qualifier("customerMongoClient") MongoClient mongoClient) {
+    @Primary
+    @Bean(name = "notificationMongoDatabaseFactory")
+    public MongoDatabaseFactory mongoDatabaseFactory(@Qualifier("notificationMongoClient") MongoClient mongoClient) {
         return new SimpleMongoClientDatabaseFactory(
                 mongoClient,
-                "customers"
+                "notifications"
         );
     }
 
-    @Bean("customerMappingMongoConverter")
-    public MappingMongoConverter customerMappingMongoConverter(
-            @Qualifier("customerMongoDatabaseFactory")
+    @Bean("notificationMappingMongoConverter")
+    public MappingMongoConverter notificationMappingMongoConverter(
+            @Qualifier("notificationMongoDatabaseFactory")
             MongoDatabaseFactory factory,
             MongoMappingContext context,
             MongoCustomConversions conversions
     ) {
-
         MappingMongoConverter converter =
                 new MappingMongoConverter(
                         new DefaultDbRefResolver(factory),
                         context
                 );
-
         converter.setCustomConversions(conversions);
         converter.setTypeMapper(new DefaultMongoTypeMapper(null));
-
         return converter;
     }
 
 
-    @Bean(name = "customerMongoTemplate")
-    public MongoTemplate customerMongoTemplate(@Qualifier("customerMongoDatabaseFactory") MongoDatabaseFactory factory,
-            @Qualifier("customerMappingMongoConverter") MappingMongoConverter converter) {
+    @Primary
+    @Bean(name = "notificationMongoTemplate")
+    public MongoTemplate notificationMongoTemplate(
+            @Qualifier("notificationMongoDatabaseFactory")
+            MongoDatabaseFactory factory,
+            @Qualifier("notificationMappingMongoConverter")
+            MappingMongoConverter converter) {
+
         return new MongoTemplate(factory, converter);
     }
 
-    @Bean
-    public ApplicationRunner initIndexes(@Qualifier("customerMongoTemplate") MongoTemplate mongoTemplate) {
-        return args -> {
-            mongoTemplate.indexOps(Customer.class).createIndex(
-                    new Index()
-                            .on("email", Sort.Direction.ASC)
-                            .unique()
-            );
-        };
-    }
+
 }

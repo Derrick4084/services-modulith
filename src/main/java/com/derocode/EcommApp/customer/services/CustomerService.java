@@ -6,7 +6,9 @@ import com.derocode.EcommApp.customer.CustomerResponseDto;
 import com.derocode.EcommApp.customer.mapper.CustomerMapper;
 import com.derocode.EcommApp.customer.models.Customer;
 import com.derocode.EcommApp.customer.models.CustomerDatabaseSequence;
-import com.derocode.EcommApp.customer.internals.CustomerMongoRepository;
+import com.derocode.EcommApp.customer.repositories.CustomerMongoRepository;
+import com.derocode.EcommApp.exceptions.ResourceExistsException;
+import com.derocode.EcommApp.exceptions.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import org.jspecify.annotations.NonNull;
 import org.springframework.data.mongodb.core.MongoOperations;
@@ -36,7 +38,7 @@ public class CustomerService {
 
     public CustomerResponseDto getCustomerByEmail(String email) {
         Customer customer = repository.getCustomerByEmail(email).orElseThrow(
-                ()-> new RuntimeException("Customer not found")
+                ()-> new ResourceNotFoundException("Customer not found")
         );
         return mapper.entityToResponseDto(customer);
 
@@ -44,7 +46,7 @@ public class CustomerService {
 
     public CustomerResponseDto addNewCustomer(@NonNull AddCustomerRequestDto addCustomerRequestDto) {
         if(repository.existsByEmail(addCustomerRequestDto.email())){
-            throw new RuntimeException("Customer with with this email already exists");
+            throw new ResourceExistsException("Customer with with this email already exists");
         }
         Customer customer = mapper.addCustomerRequestToEntity(addCustomerRequestDto);
         customer.setId(generateSequence(Customer.CUSTOMER_SEQUENCE));

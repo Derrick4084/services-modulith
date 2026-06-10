@@ -23,8 +23,8 @@ import org.thymeleaf.spring6.SpringTemplateEngine;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.derocode.EcommApp.email.services.EmailTemplates.*;
-import static com.derocode.EcommApp.email.services.EmailTemplates.SHIPMENT_CONFIRMATION;
+import static com.derocode.EcommApp.email.enums.EmailTemplates.*;
+import static com.derocode.EcommApp.email.enums.EmailTemplates.SHIPMENT_CONFIRMATION;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.springframework.mail.javamail.MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED;
 

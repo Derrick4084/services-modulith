@@ -10,10 +10,15 @@ import com.derocode.EcommApp.order.OrderResponseDto;
 import com.derocode.EcommApp.product.ProductFacade;
 import com.derocode.EcommApp.product.ProductResponseDto;
 import com.derocode.EcommApp.product.AddProductRequestDto;
-import com.derocode.EcommApp.security.internals.JwtService;
-import com.derocode.EcommApp.security.internals.User;
-import com.derocode.EcommApp.security.internals.UserMapperImpl;
-import com.derocode.EcommApp.security.internals.UserRepository;
+import com.derocode.EcommApp.security.api.CreateUserDto;
+import com.derocode.EcommApp.security.api.UserLoginRequestDto;
+import com.derocode.EcommApp.security.api.UserResponseDto;
+import com.derocode.EcommApp.security.services.AppUserService;
+import com.derocode.EcommApp.security.services.AuthenticationService;
+import com.derocode.EcommApp.security.services.JwtService;
+import com.derocode.EcommApp.security.models.User;
+import com.derocode.EcommApp.security.mappers.UserMapperImpl;
+import com.derocode.EcommApp.security.repositories.UserRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,51 +38,55 @@ public class MainController {
     private final ProductFacade productFacade;
     private final CustomerFacade customerFacade;
     private final OrderFacade orderFacade;
-    private final AuthenticationManager authManager;
-    private final JwtService jwtService;
     private final UserRepository userRepository;
     private final UserMapperImpl mapper;
+    private final AppUserService appUserService;
+    private final AuthenticationService authenticationService;
 
 
     @GetMapping("/api/product/{id}")
     public ResponseEntity<Object> getProductById(@PathVariable Long id){
-        try {
-            ProductResponseDto response = productFacade.getProductById(id);
-            return ResponseEntity.ok(response);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+
+        ProductResponseDto response = productFacade.getProductById(id);
+        return ResponseEntity.ok(response);
+
+//        try {
+//            ProductResponseDto response = productFacade.getProductById(id);
+//            return ResponseEntity.ok(response);
+//        } catch (RuntimeException e) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+//        }
     }
 
     @PostMapping("/api/product/add")
     public ResponseEntity<Object> addProduct(@RequestBody AddProductRequestDto request){
-        try {
-            ProductResponseDto response = productFacade.addNewProduct(request);
-            return ResponseEntity.ok(response);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        ProductResponseDto response = productFacade.addNewProduct(request);
+        return ResponseEntity.ok(response);
+//        try {
+//            ProductResponseDto response = productFacade.addNewProduct(request);
+//            return ResponseEntity.ok(response);
+//        } catch (RuntimeException e) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+//        }
     }
 
 
     @PostMapping("/api/customer/add")
     public ResponseEntity<Object> addCustomer(@RequestBody AddCustomerRequestDto request){
-        try {
-            CustomerResponseDto response = customerFacade.addNewCustomer(request);
-            return ResponseEntity.ok(response);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+        CustomerResponseDto response = customerFacade.addNewCustomer(request);
+        return ResponseEntity.ok(response);
+
     }
+
+
+
 
     @GetMapping("/api/customer/email/{email}")
     public ResponseEntity<Object> getCustomerByEmail(@PathVariable String email){
-        try {
-            CustomerResponseDto response = customerFacade.getCustomerByEmail(email);
-            return ResponseEntity.ok(response);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+
+        CustomerResponseDto response = customerFacade.getCustomerByEmail(email);
+        return ResponseEntity.ok(response);
+
     }
 
     @PostMapping("/api/order/create")
@@ -86,33 +95,35 @@ public class MainController {
         if(!customerFacade.existsByEmail(request.customerEmail())) {
             return ResponseEntity.badRequest().body("No customer found to create this order");
         }
+        OrderResponseDto response = orderFacade.createOrder(request);
+        return ResponseEntity.ok(response);
 
-        try {
-            OrderResponseDto response = orderFacade.createOrder(request);
-            return ResponseEntity.ok(response);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
     }
 
 
     @PostMapping("/authenticate")
     public ResponseEntity<String> login(@RequestBody @NonNull UserLoginRequestDto loginRequest) {
         try {
-            Authentication authenticationRequest = UsernamePasswordAuthenticationToken.unauthenticated(
-                    loginRequest.email(), loginRequest.password()
-            );
-            Authentication authenticationResponse = this.authManager.authenticate(authenticationRequest);
-            String token = jwtService.generateTokenWithRoles(authenticationResponse);
-            return ResponseEntity.ok(token);
+            return ResponseEntity.ok(authenticationService.authenticate(loginRequest));
         }
-        catch (AuthenticationException e){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+        catch (RuntimeException e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
     }
 
 
-    @PostMapping("/api/user/{email}")
+    @PostMapping("/adm/user/add")
+    public ResponseEntity<Object> addUser(@RequestBody CreateUserDto request){
+        try {
+            UserResponseDto response = appUserService.addNewUser(request);
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+
+    @PostMapping("/adm/user/{email}")
     public ResponseEntity<Object> findUser(@PathVariable @NonNull String email) {
 
         if(userRepository.findByEmail(email).isEmpty()) {
