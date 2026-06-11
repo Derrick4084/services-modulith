@@ -9,11 +9,11 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import java.util.Properties;
 
 @Configuration
-@Profile("dev")
+@Profile("!prod")
 public class DevJavaMailConfig {
 
     @Bean
-    @Profile("dev")
+    @Profile("!prod")
     public JavaMailSender javaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 

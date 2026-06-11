@@ -23,6 +23,6 @@ COPY --from=build /build/target/EcommApp-*.jar /app/app.jar
 
 EXPOSE 8080
 
-# ENV ACTIVE_PROFILE=${PROFILE}
+ENV SPRING_PROFILES_ACTIVE=prod
 
 CMD ["java", "-jar", "app.jar"]

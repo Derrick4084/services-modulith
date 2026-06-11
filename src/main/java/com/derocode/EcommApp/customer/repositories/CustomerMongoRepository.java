@@ -9,4 +9,6 @@ public interface CustomerMongoRepository extends MongoRepository<Customer,Long> 
     Optional<Customer> getCustomerByEmail(String email);
 
     Boolean existsByEmail(String email);
+
+    void deleteByEmail(String email);
 }

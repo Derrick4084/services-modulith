@@ -25,7 +25,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 
 import java.util.List;
 
-@Profile("dev")
+@Profile("!prod")
 @Configuration
 @EnableMongoRepositories(
         basePackages = "com.derocode.EcommApp.customer.repositories",

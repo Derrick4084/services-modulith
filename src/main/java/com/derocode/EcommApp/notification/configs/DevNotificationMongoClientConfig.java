@@ -24,7 +24,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 
 import java.util.List;
 
-@Profile("dev")
+@Profile("!prod")
 @Configuration
 @Slf4j
 @EnableMongoRepositories(
