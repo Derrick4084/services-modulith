@@ -46,28 +46,14 @@ public class MainController {
 
     @GetMapping("/api/product/{id}")
     public ResponseEntity<Object> getProductById(@PathVariable Long id){
-
         ProductResponseDto response = productFacade.getProductById(id);
         return ResponseEntity.ok(response);
-
-//        try {
-//            ProductResponseDto response = productFacade.getProductById(id);
-//            return ResponseEntity.ok(response);
-//        } catch (RuntimeException e) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-//        }
     }
 
     @PostMapping("/api/product/add")
     public ResponseEntity<Object> addProduct(@RequestBody AddProductRequestDto request){
         ProductResponseDto response = productFacade.addNewProduct(request);
         return ResponseEntity.ok(response);
-//        try {
-//            ProductResponseDto response = productFacade.addNewProduct(request);
-//            return ResponseEntity.ok(response);
-//        } catch (RuntimeException e) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-//        }
     }
 
 

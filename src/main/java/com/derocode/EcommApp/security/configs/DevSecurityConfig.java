@@ -20,7 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @EnableMethodSecurity
 @AllArgsConstructor
-@Profile("dev")
+@Profile("!prod")
 public class DevSecurityConfig {
 
     private final JwtFilter jwtFilter;
