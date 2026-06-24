@@ -3,6 +3,7 @@ package com.derocode.EcommApp;
 import com.derocode.EcommApp.customer.AddCustomerRequestDto;
 import com.derocode.EcommApp.customer.CustomerResponseDto;
 import com.derocode.EcommApp.customer.api.CustomerAddressRequestDto;
+import com.derocode.EcommApp.customer.mapper.CustomerMapperImpl;
 import com.derocode.EcommApp.customer.repositories.CustomerMongoRepository;
 import com.derocode.EcommApp.customer.services.CustomerService;
 import org.junit.jupiter.api.AfterEach;
@@ -24,6 +25,9 @@ public class CustomerServiceIntegrationTest {
     private CustomerService customerService;
 
     @Autowired
+    private CustomerMapperImpl customerMapper;
+
+    @Autowired
     private CustomerMongoRepository repository;
 
 
@@ -36,6 +40,7 @@ public class CustomerServiceIntegrationTest {
     void shouldCreateCustomer() {
 
         List<CustomerAddressRequestDto> addresses = new ArrayList<>();
+
 
         CustomerAddressRequestDto address1 = new CustomerAddressRequestDto(
                 "1313",
@@ -59,11 +64,12 @@ public class CustomerServiceIntegrationTest {
                 "Bob",
                 "Thomas",
                 "bthomas@test.com",
+                "abc123",
                 addresses
         );
 
         CustomerResponseDto response =
-                customerService.addNewCustomer(dto);
+                customerMapper.entityToResponse(customerService.addNewCustomer(dto));
 
         assertThat(response.email())
                 .isEqualTo("bthomas@test.com");

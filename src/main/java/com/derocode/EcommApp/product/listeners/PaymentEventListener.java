@@ -1,7 +1,7 @@
 package com.derocode.EcommApp.product.listeners;
 
-import com.derocode.EcommApp.events.PaymentEventDto;
-import com.derocode.EcommApp.product.services.ProductService;
+import com.derocode.EcommApp.events.SharedPaymentEventDto;
+import com.derocode.EcommApp.product.services.ProductEventHandlerService;
 import lombok.AllArgsConstructor;
 import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Component;
@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class PaymentEventListener {
 
-    private final ProductService productService;
+    private final ProductEventHandlerService handlerService;
 
     @ApplicationModuleListener
-    public void on(PaymentEventDto paymentEventDto) {
-        productService.handlePaymentEvent(paymentEventDto);
+    public void on(SharedPaymentEventDto paymentEventDto) {
+        handlerService.handlePaymentEvent(paymentEventDto);
     }
 }

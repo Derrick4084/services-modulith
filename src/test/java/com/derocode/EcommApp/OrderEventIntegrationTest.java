@@ -1,18 +1,15 @@
 package com.derocode.EcommApp;
 
 
-import com.derocode.EcommApp.events.OrderEventDto;
+import com.derocode.EcommApp.events.SharedOrderEventDto;
 import com.derocode.EcommApp.order.CreateOrderDto;
 import com.derocode.EcommApp.order.OrderResponseDto;
-import com.derocode.EcommApp.order.api.CreateOrderItemDto;
+import com.derocode.EcommApp.order.CreateOrderItemDto;
+import com.derocode.EcommApp.order.mappers.OrderMapperImpl;
 import com.derocode.EcommApp.order.services.OrderService;
-import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.modulith.test.ApplicationModuleTest;
-import org.springframework.modulith.test.PublishedEvents;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.event.ApplicationEvents;
 import org.springframework.test.context.event.RecordApplicationEvents;
 
@@ -30,6 +27,9 @@ public class OrderEventIntegrationTest {
 
     @Autowired
     ApplicationEvents events;
+
+    @Autowired
+    OrderMapperImpl orderMapper;
 
     @Test
     void publishesOrderCreatedEvent() {
@@ -56,9 +56,9 @@ public class OrderEventIntegrationTest {
         );
 
 
-        OrderResponseDto response = orderService.createOrder(dto);
+        OrderResponseDto response = orderMapper.entityToResponse(orderService.createOrder(dto));
 
-        assertThat(events.stream(OrderEventDto.class).count()).isEqualTo(1);
+        assertThat(events.stream(SharedOrderEventDto.class).count()).isEqualTo(1);
 
 
 

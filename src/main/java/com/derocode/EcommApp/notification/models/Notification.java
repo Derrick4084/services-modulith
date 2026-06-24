@@ -2,14 +2,15 @@ package com.derocode.EcommApp.notification.models;
 
 
 
-import com.derocode.EcommApp.events.OrderEventDto;
-import com.derocode.EcommApp.events.PaymentEventDto;
-import com.derocode.EcommApp.events.ShipmentEventDto;
+import com.derocode.EcommApp.events.SharedOrderEventDto;
+import com.derocode.EcommApp.events.SharedPaymentEventDto;
+import com.derocode.EcommApp.events.SharedShipmentEventDto;
 
 import com.derocode.EcommApp.notification.enums.NotificationType;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
@@ -36,13 +37,16 @@ public class Notification {
     @Id
     private Long id;
 
+    @Indexed
+    private Long orderId;
+
     NotificationType type;
 
     private LocalDateTime notificationDate;
 
-    private OrderEventDto orderEventDto;
+    private SharedOrderEventDto orderEventDto;
 
-    private PaymentEventDto paymentEventDto;
+    private SharedPaymentEventDto paymentEventDto;
 
-    private ShipmentEventDto shipmentEventDto;
+    private SharedShipmentEventDto shipmentEventDto;
 }

@@ -18,7 +18,7 @@ import java.util.List;
 @Setter
 @Builder
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "users", schema = "services")
+@Table(name = "user", schema = "security")
 public class User implements UserDetails{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

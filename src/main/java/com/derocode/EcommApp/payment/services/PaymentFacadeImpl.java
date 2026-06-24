@@ -1,7 +1,7 @@
 package com.derocode.EcommApp.payment.services;
 
 import com.derocode.EcommApp.payment.PaymentFacade;
-import com.derocode.EcommApp.payment.PaymentResponseDto;
+import com.derocode.EcommApp.payment.api.PaymentResponseDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

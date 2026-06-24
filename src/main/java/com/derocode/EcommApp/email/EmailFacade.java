@@ -1,17 +1,17 @@
 package com.derocode.EcommApp.email;
 
 
-import com.derocode.EcommApp.events.OrderEventDto;
-import com.derocode.EcommApp.events.PaymentEventDto;
-import com.derocode.EcommApp.events.ShipmentEventDto;
+import com.derocode.EcommApp.events.SharedOrderEventDto;
+import com.derocode.EcommApp.events.SharedPaymentEventDto;
+import com.derocode.EcommApp.events.SharedShipmentEventDto;
 import jakarta.mail.MessagingException;
 
 public interface EmailFacade {
 
-    void sendOrderConfirmationEmail(OrderEventDto orderEventDto) throws MessagingException;
+    void sendOrderConfirmationEmail(SharedOrderEventDto orderEventDto) throws MessagingException;
 
-    void sendPaymentConfirmationEmail(PaymentEventDto paymentEventDto) throws MessagingException;
+    void sendPaymentConfirmationEmail(SharedPaymentEventDto paymentEventDto) throws MessagingException;
 
-    void sendShipmentConfirmationEmail(ShipmentEventDto shipmentEventDto) throws MessagingException;
+    void sendShipmentConfirmationEmail(SharedShipmentEventDto shipmentEventDto) throws MessagingException;
 
 }

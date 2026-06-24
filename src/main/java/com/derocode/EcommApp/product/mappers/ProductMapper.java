@@ -1,13 +1,12 @@
 package com.derocode.EcommApp.product.mappers;
 
 
-import com.derocode.EcommApp.product.AddProductRequestDto;
+import com.derocode.EcommApp.product.api.AddProductRequestDto;
 import com.derocode.EcommApp.product.ProductResponseDto;
-import com.derocode.EcommApp.product.models.Category;
 import com.derocode.EcommApp.product.models.Product;
-import org.jspecify.annotations.NonNull;
 import org.mapstruct.CollectionMappingStrategy;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(
@@ -17,27 +16,14 @@ import org.mapstruct.ReportingPolicy;
 )
 public interface ProductMapper {
 
-    default ProductResponseDto entityToResponse(@NonNull Product product) {
-        return new ProductResponseDto(
-                product.getId(),
-                product.getName(),
-                product.getDescription(),
-                product.getAvailableQuantity(),
-                product.getPrice(),
-                product.getCategory().getName()
-        );
-    }
+    @Mapping(target = "category", expression = "java(product.getCategory().getName())")
+    ProductResponseDto entityToResponse(Product product);
 
-    default Product addProductRequestToEntity(@NonNull AddProductRequestDto request) {
 
-        return Product.builder()
-                .name(request.productName())
-                .description(request.description())
-                .availableQuantity(request.quantity())
-                .price(request.price())
-                .category(Category.builder().name(request.category()).build())
-                .build();
-    }
+    @Mapping(target = "name", source = "productName")
+    @Mapping(target = "category", expression = "java(com.derocode.EcommApp.product.models.Category.builder().name(request.category()).build())")
+    Product requestToEntity(AddProductRequestDto request);
+
 
 }
 

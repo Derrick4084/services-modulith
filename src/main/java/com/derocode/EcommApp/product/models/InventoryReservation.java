@@ -6,7 +6,7 @@ import lombok.*;
 
 
 @Entity
-@Table(name = "inventory_reservation", schema = "services",
+@Table(name = "inventory_reservation", schema = "product",
 indexes = {
         @Index(name = "orderId_idx", columnList = "orderId")
 })

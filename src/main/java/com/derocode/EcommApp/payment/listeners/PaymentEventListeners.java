@@ -1,7 +1,7 @@
 package com.derocode.EcommApp.payment.listeners;
 
 
-import com.derocode.EcommApp.events.OrderEventDto;
+import com.derocode.EcommApp.events.SharedOrderEventDto;
 import com.derocode.EcommApp.payment.services.PaymentService;
 import lombok.AllArgsConstructor;
 import org.springframework.modulith.events.ApplicationModuleListener;
@@ -14,7 +14,7 @@ public class PaymentEventListeners {
     private final PaymentService paymentService;
 
     @ApplicationModuleListener
-    public void on(OrderEventDto event) {
+    public void on(SharedOrderEventDto event) {
         paymentService.paymentOrderEventHandler(event);
     }
 }

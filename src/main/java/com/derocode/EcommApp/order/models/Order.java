@@ -1,8 +1,8 @@
 package com.derocode.EcommApp.order.models;
 
 
-import com.derocode.EcommApp.enums.OrderStatus;
-import com.derocode.EcommApp.enums.PaymentMethod;
+import com.derocode.EcommApp.enums.SharedOrderStatus;
+import com.derocode.EcommApp.enums.SharedPaymentMethod;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -21,7 +21,7 @@ import java.util.List;
 @Setter
 @Builder
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "order", schema = "services")
+@Table(name = "order", schema = "ordering")
 public class Order implements Serializable {
 
     @Id
@@ -32,12 +32,12 @@ public class Order implements Serializable {
     private String reference;
 
     @Enumerated(EnumType.STRING)
-    private OrderStatus status;
+    private SharedOrderStatus status;
 
     private BigDecimal totalAmount;
 
     @Enumerated(EnumType.STRING)
-    private PaymentMethod paymentMethod;
+    private SharedPaymentMethod paymentMethod;
 
     private String customerEmail;
 

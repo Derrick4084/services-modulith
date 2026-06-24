@@ -1,4 +1,4 @@
-CREATE TABLE services.shipments (
+CREATE TABLE shipping.shipments (
                                     estimated_delivery_date date NULL,
                                     shipping_cost float8 NULL,
                                     created_at timestamp(6) NULL,

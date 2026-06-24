@@ -1,7 +1,7 @@
 package com.derocode.EcommApp.payment.models;
 
-import com.derocode.EcommApp.enums.PaymentMethod;
-import com.derocode.EcommApp.enums.PaymentStatus;
+import com.derocode.EcommApp.enums.SharedPaymentMethod;
+import com.derocode.EcommApp.enums.SharedPaymentStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -20,7 +20,7 @@ import static jakarta.persistence.EnumType.STRING;
 @Setter
 @Builder
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "payment", schema = "services")
+@Table(name = "payment", schema = "payment")
 public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,10 +29,10 @@ public class Payment {
     private BigDecimal amount;
 
     @Enumerated(STRING)
-    private PaymentMethod paymentMethod;
+    private SharedPaymentMethod paymentMethod;
 
     @Enumerated(STRING)
-    private PaymentStatus status;
+    private SharedPaymentStatus status;
 
     private Long orderId;
 

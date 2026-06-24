@@ -2,10 +2,10 @@ package com.derocode.EcommApp;
 
 
 import com.derocode.EcommApp.customer.services.CustomerService;
-import com.derocode.EcommApp.exceptions.ResourceExistsException;
-import com.derocode.EcommApp.exceptions.ResourceNotFoundException;
+import com.derocode.EcommApp.exceptions.SharedResourceExistsException;
+import com.derocode.EcommApp.exceptions.SharedResourceNotFoundException;
 import com.derocode.EcommApp.security.api.CreateUserDto;
-import com.derocode.EcommApp.security.services.AppUserService;
+import com.derocode.EcommApp.security.services.AppUserDetailService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,13 +20,13 @@ public class CustomExceptionsTest {
     CustomerService customerService;
 
     @Autowired
-    AppUserService appUserService;
+    AppUserDetailService appUserService;
 
     @Test
     void shouldThrowResourceNotFoundException(){
 
         assertThatThrownBy(()-> customerService.getCustomerByEmail("sdoe@example.com"))
-                .isInstanceOf(ResourceNotFoundException.class)
+                .isInstanceOf(SharedResourceNotFoundException.class)
                 .hasMessageContaining("Customer not found");
 
     }
@@ -34,14 +34,13 @@ public class CustomExceptionsTest {
 
     @Test
     void shouldThrowResourceExistsException(){
-        assertThatThrownBy(()-> appUserService.addNewUser(new CreateUserDto(
+        assertThatThrownBy(()-> appUserService.createUser(new CreateUserDto(
                 "Admin",
                 "Admin",
                 "admin@example.com",
-                "abc123",
-                "ADMIN"
+                "abc123"
 
-        ))).isInstanceOf(ResourceExistsException.class)
+        ))).isInstanceOf(SharedResourceExistsException.class)
                 .hasMessageContaining("User with this email admin@example.com already exists");
 
     }

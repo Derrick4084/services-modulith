@@ -1,7 +1,7 @@
 package com.derocode.EcommApp;
 
-import com.derocode.EcommApp.enums.PaymentMethod;
-import com.derocode.EcommApp.enums.PaymentStatus;
+import com.derocode.EcommApp.enums.SharedPaymentMethod;
+import com.derocode.EcommApp.enums.SharedPaymentStatus;
 import com.derocode.EcommApp.payment.models.Payment;
 import com.derocode.EcommApp.payment.repositories.PaymentRepository;
 import com.derocode.EcommApp.payment.services.PaymentService;
@@ -31,9 +31,9 @@ public class PaymentRepositoryTest {
         Payment payment = Payment.builder()
                 .orderId(1000L)
                 .orderReference("ODR-123")
-                .status(PaymentStatus.ACCEPTED)
+                .status(SharedPaymentStatus.ACCEPTED)
                 .paymentDate(LocalDateTime.now())
-                .paymentMethod(PaymentMethod.DISCOVER_CARD)
+                .paymentMethod(SharedPaymentMethod.DISCOVER_CARD)
                 .amount(BigDecimal.valueOf(500.00))
                 .build();
 

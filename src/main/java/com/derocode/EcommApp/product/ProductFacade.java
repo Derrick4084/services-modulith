@@ -1,5 +1,7 @@
 package com.derocode.EcommApp.product;
 
+import com.derocode.EcommApp.product.api.AddProductRequestDto;
+
 import java.util.List;
 
 public interface ProductFacade {

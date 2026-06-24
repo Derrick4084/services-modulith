@@ -1,12 +1,12 @@
 package com.derocode.EcommApp.payment.services;
 
 
-import com.derocode.EcommApp.events.OrderEventDto;
-import com.derocode.EcommApp.events.PaymentEventDto;
-import com.derocode.EcommApp.enums.PaymentMethod;
-import com.derocode.EcommApp.enums.PaymentStatus;
-import com.derocode.EcommApp.exceptions.ResourceNotFoundException;
-import com.derocode.EcommApp.payment.PaymentResponseDto;
+import com.derocode.EcommApp.events.SharedOrderEventDto;
+import com.derocode.EcommApp.events.SharedPaymentEventDto;
+import com.derocode.EcommApp.enums.SharedPaymentMethod;
+import com.derocode.EcommApp.enums.SharedPaymentStatus;
+import com.derocode.EcommApp.exceptions.SharedResourceNotFoundException;
+import com.derocode.EcommApp.payment.api.PaymentResponseDto;
 import com.derocode.EcommApp.payment.models.Payment;
 import com.derocode.EcommApp.payment.repositories.PaymentRepository;
 import lombok.AllArgsConstructor;
@@ -41,12 +41,12 @@ public class PaymentService {
             );
         }
         else {
-            throw  new ResourceNotFoundException("Payment not found");
+            throw  new SharedResourceNotFoundException("Payment not found");
         }
     }
 
     @Transactional
-    public void paymentOrderEventHandler(@NonNull OrderEventDto event) {
+    public void paymentOrderEventHandler(@NonNull SharedOrderEventDto event) {
 
         if (Objects.equals(event.status(), "CREATED")) {
 
@@ -58,15 +58,15 @@ public class PaymentService {
             Payment payment = Payment.builder()
                     .orderId(event.orderId())
                     .orderReference(event.reference())
-                    .status(PaymentStatus.ACCEPTED)
+                    .status(SharedPaymentStatus.ACCEPTED)
                     .paymentDate(LocalDateTime.now())
-                    .paymentMethod(PaymentMethod.valueOf(event.paymentMethod()))
+                    .paymentMethod(SharedPaymentMethod.valueOf(event.paymentMethod()))
                     .amount(event.totalAmount())
                     .build();
 
             Payment savedPayment = paymentRepository.save(payment);
 
-            PaymentEventDto paymentEventDto = new PaymentEventDto(
+            SharedPaymentEventDto paymentEventDto = new SharedPaymentEventDto(
                     savedPayment.getId(),
                     savedPayment.getPaymentDate(),
                     savedPayment.getPaymentMethod().name(),

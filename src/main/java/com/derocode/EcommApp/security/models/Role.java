@@ -11,7 +11,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "users_role", schema = "services")
+@Table(name = "user_roles", schema = "security")
 @Getter
 @Setter
 public class Role {

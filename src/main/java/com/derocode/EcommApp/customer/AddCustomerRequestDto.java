@@ -8,6 +8,7 @@ public record AddCustomerRequestDto(
         String firstName,
         String lastName,
         String email,
+        String password,
         List<CustomerAddressRequestDto>addresses
 ) {
 }

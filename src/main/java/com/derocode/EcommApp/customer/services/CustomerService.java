@@ -7,12 +7,17 @@ import com.derocode.EcommApp.customer.mapper.CustomerMapper;
 import com.derocode.EcommApp.customer.models.Customer;
 import com.derocode.EcommApp.customer.models.CustomerDatabaseSequence;
 import com.derocode.EcommApp.customer.repositories.CustomerMongoRepository;
-import com.derocode.EcommApp.exceptions.ResourceExistsException;
-import com.derocode.EcommApp.exceptions.ResourceNotFoundException;
-import lombok.AllArgsConstructor;
+import com.derocode.EcommApp.exceptions.SharedResourceExistsException;
+import com.derocode.EcommApp.exceptions.SharedResourceNotFoundException;
 import org.jspecify.annotations.NonNull;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -22,12 +27,25 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 
 @Service
-@AllArgsConstructor
 public class CustomerService {
 
     private final CustomerMongoRepository repository;
     private final MongoOperations mongoOperations;
     private final CustomerMapper mapper;
+    private final PasswordEncoder encoder;
+
+    public CustomerService(
+            CustomerMongoRepository repository,
+            @Qualifier("customerMongoTemplate") MongoOperations mongoOperations,
+            CustomerMapper mapper,
+            PasswordEncoder encoder
+    ) {
+        this.repository = repository;
+        this.mongoOperations = mongoOperations;
+        this.mapper = mapper;
+        this.encoder = encoder;
+    }
+
 
     public long generateSequence(String seqName) {
         CustomerDatabaseSequence counter = mongoOperations.findAndModify(query(where("_id").is(seqName)),
@@ -36,27 +54,38 @@ public class CustomerService {
         return !Objects.isNull(counter) ? counter.getSeq() : 1;
     }
 
-    public CustomerResponseDto getCustomerByEmail(String email) {
-        Customer customer = repository.getCustomerByEmail(email).orElseThrow(
-                ()-> new ResourceNotFoundException("Customer not found")
+    public Customer getCustomerByEmail(String email) {
+        return repository.getCustomerByEmail(email).orElseThrow(
+                ()-> new SharedResourceNotFoundException("Customer not found")
         );
-        return mapper.entityToResponseDto(customer);
 
     }
 
-    public CustomerResponseDto addNewCustomer(@NonNull AddCustomerRequestDto addCustomerRequestDto) {
+    public Customer addNewCustomer(@NonNull AddCustomerRequestDto addCustomerRequestDto) {
         if(repository.existsByEmail(addCustomerRequestDto.email())){
-            throw new ResourceExistsException("Customer with with this email already exists");
+            throw new SharedResourceExistsException("Customer with with this email already exists");
         }
-        Customer customer = mapper.addCustomerRequestToEntity(addCustomerRequestDto);
+        Customer customer = mapper.requestToCustomer(addCustomerRequestDto);
         customer.setId(generateSequence(Customer.CUSTOMER_SEQUENCE));
-        Customer savedCustomer = repository.save(customer);
-        return mapper.entityToResponseDto(savedCustomer);
+        customer.setPassword(encoder.encode(addCustomerRequestDto.password()));
+        return repository.save(customer);
     }
 
     public Boolean existsByEmail(String email) {
         return repository.existsByEmail(email);
     }
+
+
+    public Page<CustomerResponseDto> getAll(int page, int size){
+
+        Pageable pageable = PageRequest.of(page,size);
+
+        return repository.findAll(pageable).map(mapper::entityToResponse);
+
+
+    }
+
+
 
 
 

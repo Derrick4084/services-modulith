@@ -1,9 +1,9 @@
 package com.derocode.EcommApp.notification.listeners;
 
-import com.derocode.EcommApp.events.OrderEventDto;
-import com.derocode.EcommApp.events.PaymentEventDto;
-import com.derocode.EcommApp.events.ShipmentEventDto;
-import com.derocode.EcommApp.notification.services.NotificationService;
+import com.derocode.EcommApp.events.SharedOrderEventDto;
+import com.derocode.EcommApp.events.SharedPaymentEventDto;
+import com.derocode.EcommApp.events.SharedShipmentEventDto;
+import com.derocode.EcommApp.notification.services.NotificationEventHandlerService;
 import org.jspecify.annotations.NonNull;
 import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Component;
@@ -11,27 +11,27 @@ import org.springframework.stereotype.Component;
 @Component
 public class NotificationEventListeners {
 
-    private final NotificationService notificationService;
+    private final NotificationEventHandlerService eventHandlerService;
 
-    public NotificationEventListeners(NotificationService notificationService) {
-        this.notificationService = notificationService;
+    public NotificationEventListeners(NotificationEventHandlerService eventHandlerService) {
+        this.eventHandlerService = eventHandlerService;
     }
 
     @ApplicationModuleListener
-    public void on(@NonNull OrderEventDto orderEventDto) {
-        notificationService.handleOrderEvent(orderEventDto);
-
-    }
-
-    @ApplicationModuleListener
-    public void on(@NonNull PaymentEventDto paymentEventDto) {
-        notificationService.handlePaymentEvent(paymentEventDto);
+    public void on(@NonNull SharedOrderEventDto orderEventDto) {
+        eventHandlerService.handleOrderEvent(orderEventDto);
 
     }
 
     @ApplicationModuleListener
-    public void on(@NonNull ShipmentEventDto shipmentEventDto) {
-        notificationService.handleShipmentEvent(shipmentEventDto);
+    public void on(@NonNull SharedPaymentEventDto paymentEventDto) {
+        eventHandlerService.handlePaymentEvent(paymentEventDto);
+
+    }
+
+    @ApplicationModuleListener
+    public void on(@NonNull SharedShipmentEventDto shipmentEventDto) {
+        eventHandlerService.handleShipmentEvent(shipmentEventDto);
 
     }
 }

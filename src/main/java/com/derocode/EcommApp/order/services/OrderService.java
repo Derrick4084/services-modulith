@@ -1,13 +1,13 @@
 package com.derocode.EcommApp.order.services;
 
-import com.derocode.EcommApp.enums.OrderStatus;
-import com.derocode.EcommApp.enums.PaymentMethod;
-import com.derocode.EcommApp.events.OrderEventDto;
-import com.derocode.EcommApp.events.ShipmentEventDto;
-import com.derocode.EcommApp.exceptions.ResourceNotFoundException;
+import com.derocode.EcommApp.enums.SharedOrderStatus;
+import com.derocode.EcommApp.enums.SharedPaymentMethod;
+import com.derocode.EcommApp.events.SharedOrderEventDto;
+import com.derocode.EcommApp.exceptions.SharedResourceNotFoundException;
 import com.derocode.EcommApp.order.CreateOrderDto;
 import com.derocode.EcommApp.order.OrderResponseDto;
-import com.derocode.EcommApp.order.mappers.OrderMapper;
+import com.derocode.EcommApp.order.components.OrderUtils;
+import com.derocode.EcommApp.order.mappers.OrderMapperImpl;
 import com.derocode.EcommApp.order.models.Order;
 import com.derocode.EcommApp.order.models.OrderLine;
 import com.derocode.EcommApp.order.repositories.OrderRepository;
@@ -24,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 
@@ -37,11 +36,11 @@ public class OrderService {
     private final OrderUtils utils;
     private final ProductFacade productFacade;
     private final ApplicationEventPublisher publisher;
-    private final OrderMapper mapper;
+    private final OrderMapperImpl mapper;
 
 
     @Transactional
-    public OrderResponseDto createOrder(@NonNull CreateOrderDto request) {
+    public Order createOrder(@NonNull CreateOrderDto request) {
 
         List<ProductOrderRequestDto> requestedProducts = request.products()
                 .stream().map(ophr ->
@@ -54,8 +53,8 @@ public class OrderService {
         order.setCustomerEmail(request.customerEmail());
         order.setReference(utils.generateRef());
         order.setOrderDate(LocalDateTime.now());
-        order.setPaymentMethod(PaymentMethod.valueOf(request.paymentMethod()));
-        order.setStatus(OrderStatus.CREATED);
+        order.setPaymentMethod(SharedPaymentMethod.valueOf(request.paymentMethod()));
+        order.setStatus(SharedOrderStatus.CREATED);
 
         Order partialOrder = orderRepository.save(order);
 
@@ -67,47 +66,36 @@ public class OrderService {
         partialOrder.setTotalAmount(BigDecimal.valueOf(totalAmount));
 
         try {
-
             Order completedOrder = orderRepository.save(partialOrder);
-            OrderEventDto orderEventDto = mapper.orderToOrderEvent(completedOrder);
+            SharedOrderEventDto orderEventDto = mapper.orderToEventDto(completedOrder);
             publisher.publishEvent(orderEventDto);
             System.out.println("Published order event");
-            return mapper.entityToOrderResponseDto(completedOrder);
+            return completedOrder;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
-
-
-
-
     }
 
 
-    public OrderResponseDto getOrderById(Long id) {
-        Optional<Order> order = orderRepository.findByIdWithOrderLines(id);
-        return order.map(mapper::entityToOrderResponseDto).orElseThrow(()-> new ResourceNotFoundException(
-                "Order not found"
-        ));
+    public Order getOrderById(Long id) {
+//        Optional<Order> order = orderRepository.findByIdWithOrderLines(id);
+
+        return orderRepository.findByIdWithOrderLines(id).orElseThrow(()->
+                new SharedResourceNotFoundException("Order with id " + id.toString() + " not found")
+        );
+
+
+
+
+
+//        return order.map(mapper::entityToResponse).orElseThrow(()-> new SharedResourceNotFoundException(
+//                "Order not found"
+//        ));
     }
+
 
     public Boolean existsById(Long id) {
         return orderRepository.findById(id).isPresent();
-    }
-
-
-    @Transactional
-    public void handleShipmentEvent(@NonNull ShipmentEventDto event) {
-        if(Objects.equals(event.status(),"SHIPPED")){
-            Order order = orderRepository.findById(event.orderId()).orElseThrow(() ->
-                    new ResourceNotFoundException("Order not found for this shipment"));
-            order.setStatus(OrderStatus.COMPLETE);
-            order.setUpdatedAt(LocalDateTime.now());
-
-            // Save method not needed since using @Transactional
-            // Hibernate will issue the update when the transaction commits
-            // orderRepository.save(order);
-        }
     }
 }
 

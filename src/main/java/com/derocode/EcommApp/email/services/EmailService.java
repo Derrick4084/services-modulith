@@ -3,9 +3,9 @@ package com.derocode.EcommApp.email.services;
 
 import com.derocode.EcommApp.customer.CustomerFacade;
 import com.derocode.EcommApp.customer.CustomerResponseDto;
-import com.derocode.EcommApp.events.OrderEventDto;
-import com.derocode.EcommApp.events.PaymentEventDto;
-import com.derocode.EcommApp.events.ShipmentEventDto;
+import com.derocode.EcommApp.events.SharedOrderEventDto;
+import com.derocode.EcommApp.events.SharedPaymentEventDto;
+import com.derocode.EcommApp.events.SharedShipmentEventDto;
 import com.derocode.EcommApp.order.OrderFacade;
 import com.derocode.EcommApp.order.OrderResponseDto;
 import jakarta.mail.MessagingException;
@@ -38,7 +38,7 @@ public class EmailService {
     private final CustomerFacade customerFacade;
     private final OrderFacade orderFacade;
 
-    public void sendOrderConfirmationEmail(@NonNull OrderEventDto orderEventDto) {
+    public void sendOrderConfirmationEmail(@NonNull SharedOrderEventDto orderEventDto) {
 
         try {
             MimeMessage mimeMessage = emailSender.createMimeMessage();
@@ -80,7 +80,7 @@ public class EmailService {
         }
     }
 
-    public void sendPaymentConfirmationEmail(@NonNull PaymentEventDto paymentEvent) {
+    public void sendPaymentConfirmationEmail(@NonNull SharedPaymentEventDto paymentEvent) {
 
         try {
 
@@ -124,7 +124,7 @@ public class EmailService {
         }
     }
 
-    public void sendShipmentConfirmationEmail(@NonNull ShipmentEventDto shipmentEvent) {
+    public void sendShipmentConfirmationEmail(@NonNull SharedShipmentEventDto shipmentEvent) {
 
         try {
             MimeMessage mimeMessage = emailSender.createMimeMessage();

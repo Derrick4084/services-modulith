@@ -1,7 +1,8 @@
 package com.derocode.EcommApp.security.handlers;
 
-import com.derocode.EcommApp.exceptions.ResourceExistsException;
-import com.derocode.EcommApp.exceptions.ResourceNotFoundException;
+import com.derocode.EcommApp.exceptions.SharedFailedAuthException;
+import com.derocode.EcommApp.exceptions.SharedResourceExistsException;
+import com.derocode.EcommApp.exceptions.SharedResourceNotFoundException;
 import lombok.NonNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,14 +23,19 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<String> handleResourceNotFoundException(@NonNull ResourceNotFoundException e) {
+    @ExceptionHandler(SharedResourceNotFoundException.class)
+    public ResponseEntity<String> handleResourceNotFoundException(@NonNull SharedResourceNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 
-    @ExceptionHandler(ResourceExistsException.class)
-    public ResponseEntity<String> handleResourceExistsException(@NonNull ResourceExistsException e) {
+    @ExceptionHandler(SharedResourceExistsException.class)
+    public ResponseEntity<String> handleResourceExistsException(@NonNull SharedResourceExistsException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    }
+
+    @ExceptionHandler(SharedFailedAuthException.class)
+    public ResponseEntity<String> handleFailedAuthException(@NonNull SharedFailedAuthException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
     }
 
 }

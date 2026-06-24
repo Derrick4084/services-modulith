@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
-@Table(name = "product", schema = "services")
+@Table(name = "product", schema = "product")
 public class Product implements Serializable {
 
     @Id

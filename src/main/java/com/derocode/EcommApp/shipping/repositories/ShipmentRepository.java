@@ -10,4 +10,6 @@ public interface ShipmentRepository extends JpaRepository<Shipment,Long> {
 
     Boolean existsByOrderId(Long orderId);
 
+    Shipment getByOrderId(Long orderId);
+
 }

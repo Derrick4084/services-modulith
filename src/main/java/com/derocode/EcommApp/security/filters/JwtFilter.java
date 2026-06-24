@@ -2,8 +2,9 @@ package com.derocode.EcommApp.security.filters;
 
 
 
-import com.derocode.EcommApp.security.services.AppUserService;
-import com.derocode.EcommApp.security.services.JwtService;
+import com.derocode.EcommApp.customer.CustomerFacade;
+import com.derocode.EcommApp.security.services.AppUserDetailService;
+import com.derocode.EcommApp.jwt.SharedJwtService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
@@ -24,15 +25,16 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 @Slf4j
 public class JwtFilter extends OncePerRequestFilter {
 
-    private final JwtService jwtService;
+    private final SharedJwtService jwtService;
     private final ApplicationContext context;
 
-    public JwtFilter(JwtService jwtService, ApplicationContext context) {
+    public JwtFilter(SharedJwtService jwtService, ApplicationContext context) {
         this.jwtService = jwtService;
         this.context = context;
     }
@@ -42,7 +44,7 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
 
         String path = request.getServletPath();
-        if (path.equals("/actuator/health") || path.equals("/authenticate")) {
+        if (path.equals("/actuator/health") || path.equals("/customer/authenticate") || path.equals("/user/authenticate")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -60,11 +62,22 @@ public class JwtFilter extends OncePerRequestFilter {
 
                 // Extract username from token. in this case email is used for authentication
                 String usernameFromToken = jwtService.extractUserName(token);
+                String userType = jwtService.extractUserType(token);
+
+                UserDetails userDetail = null;
+                if(Objects.equals(userType,"customer")) {
+                    userDetail = context.getBean(CustomerFacade.class).loadCustomerByEmail(usernameFromToken);
+                }
+                else {
+                    userDetail = context.getBean(AppUserDetailService.class).loadUserByUsername(usernameFromToken);
+                }
+
+
                 // Get user details from database
-                UserDetails userDetails = context.getBean(AppUserService.class).loadUserByUsername(usernameFromToken);
+
 
                 // Check if token is valid and if username is valid and extract roles from token
-                if(jwtService.validateTokenUsingUserDetails(token,userDetails) && SecurityContextHolder.getContext().getAuthentication() == null) {
+                if(jwtService.validateTokenUsingUserDetails(token,userDetail) && SecurityContextHolder.getContext().getAuthentication() == null) {
                     Claims claims = jwtService.extractAllClaims(token);
                     List<String> roles = jwtService.extractRoles(claims);
                     List<GrantedAuthority> authorities = roles.stream()
