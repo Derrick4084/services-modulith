@@ -13,10 +13,7 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
@@ -49,6 +46,12 @@ public class CartController {
         String paymentMethod = dto.paymentMethod();
         OrderResponseDto response = cartService.processCart(paymentMethod, authentication.getName());
         return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/cart/{email}")
+    public ResponseEntity<CartResponseDto> byEmail(@PathVariable String email){
+        Cart cart = cartService.getCart(email);
+        return ResponseEntity.ok().body(cartMapper.cartToDto(cart));
     }
 
 }

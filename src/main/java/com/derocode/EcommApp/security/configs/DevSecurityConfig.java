@@ -37,27 +37,33 @@ public class DevSecurityConfig {
                         .requestMatchers("/user/authenticate").permitAll()
                         .requestMatchers("/actuator/health").permitAll()
 
+                        // Ai MCP tools
+                        .requestMatchers(HttpMethod.GET, "/customer/email/**").hasAnyRole("AI")
+
                         // Customer viewing
-                        .requestMatchers(HttpMethod.GET, "/customer/**").hasAnyRole("CUSTOMER", "USER")
+                        .requestMatchers(HttpMethod.GET, "/customer/**").hasAnyRole("CUSTOMER", "USER", "ADMIN")
 
                         // Customer management
                         .requestMatchers(HttpMethod.POST, "/customer/**").hasAnyRole("ADMIN", "OWNER")
                         .requestMatchers(HttpMethod.PUT, "/customer/**").hasAnyRole("ADMIN", "OWNER")
                         .requestMatchers(HttpMethod.DELETE, "/customer/**").hasAnyRole("ADMIN", "OWNER")
 
+
                         // Product viewing
-                        .requestMatchers(HttpMethod.GET, "/product/**").hasAnyRole("CUSTOMER", "USER","ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/product/**").hasAnyRole("AI","CUSTOMER", "USER", "ADMIN")
                         // Product management
                         .requestMatchers(HttpMethod.POST, "/product/**").hasAnyRole("ADMIN", "OWNER")
                         .requestMatchers(HttpMethod.PUT, "/product/**").hasAnyRole("ADMIN", "OWNER")
                         .requestMatchers(HttpMethod.DELETE, "/product/**").hasAnyRole("ADMIN", "OWNER")
 
                         // Cart
-                        .requestMatchers("/cart/**").hasAnyRole("CUSTOMER", "USER")
+                        .requestMatchers("/cart/*").hasAnyRole("AI", "CUSTOMER", "USER")
 
                         // Orders
-                        .requestMatchers(HttpMethod.POST, "/order/find/**").hasAnyRole("ADMIN","USER")
-                        .requestMatchers(HttpMethod.POST, "/order/create").hasRole("CUSTOMER")
+                        .requestMatchers(HttpMethod.GET, "/order/reference/**").hasAnyRole("AI","ADMIN","USER")
+                        .requestMatchers(HttpMethod.GET, "/order/id/**").hasAnyRole("AI","ADMIN","USER")
+
+                        .requestMatchers(HttpMethod.POST, "/order/create").hasAnyRole("AI", "CUSTOMER")
 
                         // Shipment
                         .requestMatchers("/shipment/**").hasAnyRole("ADMIN","USER")
@@ -65,6 +71,10 @@ public class DevSecurityConfig {
                         // Admin area
                         .requestMatchers("/user/**").hasAnyRole("ADMIN", "OWNER")
                         .requestMatchers("/admin/**").hasAnyRole("ADMIN", "OWNER")
+
+                        .requestMatchers(HttpMethod.POST,"/rag/ingest").hasAnyRole("ADMIN", "OWNER")
+
+
 
                         .anyRequest().authenticated()
                 )

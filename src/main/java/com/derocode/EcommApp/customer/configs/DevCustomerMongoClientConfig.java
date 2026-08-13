@@ -48,7 +48,7 @@ public class DevCustomerMongoClientConfig {
                                 builder.hosts(
                                         List.of(
                                                 new ServerAddress(
-                                                        "localhost",
+                                                        "10.0.0.227",
                                                         27017
                                                 )
                                         )

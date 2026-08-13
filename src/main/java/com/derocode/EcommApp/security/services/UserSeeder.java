@@ -26,40 +26,59 @@ public class UserSeeder implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
-
         loadUser();
-
 
     }
 
-    private void loadUser () {
-
-        if(userRepository.findByEmail("admin@example.com").isPresent()) {
-            log.info("Admin user already exists");
-            return;
-        }
-        Role role = roleRepository.getRoleByName(RoleEnum.ADMIN).orElseGet(
+    private Role getRole(RoleEnum roleEnum){
+        return roleRepository.getRoleByName(roleEnum).orElseGet(
                 () -> {
-                    log.warn("ADMIN role not found. Falling back to USER role");
+                    log.warn( roleEnum.name() +  " role not found. Falling back to USER role");
                     return roleRepository.getRoleByName(RoleEnum.USER)
                             .orElseThrow(() ->
                                     new IllegalStateException("USER role not found"));
                 }
         );
-        User user = User.builder()
-                .firstName("Admin")
-                .lastName("Admin")
-                .email("admin@example.com")
-                .password(encoder.encode("abc123"))
-                .role(role)
-                .build();
+    }
 
+
+    private void saveUser(User user) {
         try {
             userRepository.save(user);
+            log.info(user.getFirstName()  +  " seeded successfully");
         } catch (IllegalArgumentException | OptimisticLockingFailureException e) {
-            log.warn("There was a problem saving Admin user" + e.getMessage());
+            log.warn("There was a problem saving " + user.getFirstName() + ": "  + e.getMessage());
+        }
+    }
+
+    private void loadUser () {
+        if(userRepository.findByEmail("admin@example.com").isEmpty()) {
+
+            User adminUser = User.builder()
+                    .firstName("Admin")
+                    .lastName("Admin")
+                    .email("admin@example.com")
+                    .password(encoder.encode("abc123"))
+                    .role(getRole(RoleEnum.ADMIN))
+                    .build();
+            saveUser(adminUser);
+        }
+        else {
+            log.info("Admin user already exists");
         }
 
-        log.info("Admin user seeded successfully");
+        if(userRepository.findByEmail("agent@example.com").isEmpty()) {
+            User aiUser = User.builder()
+                    .firstName("Ai")
+                    .lastName("Agent")
+                    .email("agent@example.com")
+                    .password(encoder.encode("abc123"))
+                    .role(getRole(RoleEnum.AI))
+                    .build();
+            saveUser(aiUser);
+        }
+        else {
+            log.info("Ai agent already exists");
+        }
     }
 }

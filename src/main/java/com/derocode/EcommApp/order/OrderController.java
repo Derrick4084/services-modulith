@@ -2,7 +2,6 @@ package com.derocode.EcommApp.order;
 
 import com.derocode.EcommApp.customer.CustomerFacade;
 import com.derocode.EcommApp.order.mappers.OrderMapperImpl;
-import com.derocode.EcommApp.order.models.Order;
 import com.derocode.EcommApp.order.services.OrderService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -28,9 +27,16 @@ public class OrderController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/order/find/{id}")
-    public ResponseEntity<Object> getOrder(@RequestParam Long id){
+    @GetMapping("/order/id/{id}")
+    public ResponseEntity<OrderResponseDto> getOrderById(@PathVariable Long id){
         OrderResponseDto response = orderMapper.entityToResponse(orderService.getOrderById(id));
+        return ResponseEntity.ok(response);
+
+    }
+
+    @GetMapping("/order/reference/{reference}")
+    public ResponseEntity<OrderResponseDto> getOrderByReference(@PathVariable String reference){
+        OrderResponseDto response = orderMapper.entityToResponse(orderService.getOrderByReference(reference));
         return ResponseEntity.ok(response);
 
     }

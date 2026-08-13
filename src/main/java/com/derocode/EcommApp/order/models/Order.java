@@ -29,6 +29,7 @@ public class Order implements Serializable {
     @Column(name = "ID",unique = true, nullable = false)
     private Long id;
 
+    @Column(unique = true)
     private String reference;
 
     @Enumerated(EnumType.STRING)

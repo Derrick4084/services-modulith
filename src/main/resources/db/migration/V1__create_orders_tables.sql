@@ -5,12 +5,16 @@ CREATE TABLE ordering."order" (
           updated_at timestamp(6) NULL,
           customer_email varchar(255) NULL,
           payment_method varchar(255) NULL,
-          reference varchar(255) NULL,
+          reference varchar(255) NOT NULL,
           status varchar(255) NULL,
           CONSTRAINT order_payment_method_check CHECK (((payment_method)::text = ANY ((ARRAY['PAYPAL'::character varying, 'CREDIT_CARD'::character varying, 'VISA_CARD'::character varying, 'MASTER_CARD'::character varying, 'AMERICAN_EXPRESS'::character varying, 'DISCOVER_CARD'::character varying, 'APPLE_PAY'::character varying, 'GOOGLE_PAY'::character varying, 'AMAZON_PAY'::character varying, 'BITCOIN'::character varying])::text[]))),
 	CONSTRAINT order_pkey PRIMARY KEY (id),
 	CONSTRAINT order_status_check CHECK (((status)::text = ANY ((ARRAY['CANCELED'::character varying, 'COMPLETE'::character varying, 'CREATED'::character varying, 'IN_PROCESS'::character varying, 'FAILED_CREATION'::character varying, 'PENDING_PAYMENT'::character varying, 'FAILED_PAYMENT'::character varying])::text[])))
 );
+
+
+ALTER TABLE ordering."order"
+    ADD CONSTRAINT uk_order_reference UNIQUE (reference);
 
 
 

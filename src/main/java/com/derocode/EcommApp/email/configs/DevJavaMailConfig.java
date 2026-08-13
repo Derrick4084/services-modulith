@@ -17,7 +17,7 @@ public class DevJavaMailConfig {
     public JavaMailSender javaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 
-        mailSender.setHost("localhost");
+        mailSender.setHost("10.0.0.227");
         mailSender.setPort(1025);
 
         mailSender.setUsername("dero");

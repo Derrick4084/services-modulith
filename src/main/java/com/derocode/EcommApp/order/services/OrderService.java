@@ -78,24 +78,19 @@ public class OrderService {
 
 
     public Order getOrderById(Long id) {
-//        Optional<Order> order = orderRepository.findByIdWithOrderLines(id);
-
         return orderRepository.findByIdWithOrderLines(id).orElseThrow(()->
                 new SharedResourceNotFoundException("Order with id " + id.toString() + " not found")
         );
-
-
-
-
-
-//        return order.map(mapper::entityToResponse).orElseThrow(()-> new SharedResourceNotFoundException(
-//                "Order not found"
-//        ));
     }
 
 
     public Boolean existsById(Long id) {
         return orderRepository.findById(id).isPresent();
+    }
+
+    public Order getOrderByReference(String reference) {
+        return orderRepository.findByReference(reference)
+                .orElseThrow(()-> new RuntimeException("Order not found"));
     }
 }
 
