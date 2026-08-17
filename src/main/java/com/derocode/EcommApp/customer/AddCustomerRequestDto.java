@@ -15,7 +15,6 @@ public record AddCustomerRequestDto(
         String email,
         @NotBlank
         String password,
-        @NotBlank
         List<CustomerAddressRequestDto>addresses
 ) {
 }

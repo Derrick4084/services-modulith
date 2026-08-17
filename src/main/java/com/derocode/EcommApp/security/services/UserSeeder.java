@@ -58,7 +58,7 @@ public class UserSeeder implements ApplicationRunner {
                     .firstName("Admin")
                     .lastName("Admin")
                     .email("admin@example.com")
-                    .password(encoder.encode("abc123"))
+                    .password(encoder.encode("abc12345"))
                     .role(getRole(RoleEnum.ADMIN))
                     .build();
             saveUser(adminUser);
@@ -72,7 +72,7 @@ public class UserSeeder implements ApplicationRunner {
                     .firstName("Ai")
                     .lastName("Agent")
                     .email("agent@example.com")
-                    .password(encoder.encode("abc123"))
+                    .password(encoder.encode("abc12345"))
                     .role(getRole(RoleEnum.AI))
                     .build();
             saveUser(aiUser);
