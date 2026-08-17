@@ -8,6 +8,7 @@ import com.derocode.EcommApp.security.services.UserAuthenticationService;
 import com.derocode.EcommApp.security.models.User;
 import com.derocode.EcommApp.security.mappers.UserMapperImpl;
 import com.derocode.EcommApp.security.repositories.UserRepository;
+import jakarta.validation.Valid;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +29,7 @@ public class UserController {
     private final UserAuthenticationService authenticationService;
 
     @PostMapping("/user/authenticate")
-    public ResponseEntity<String> userLogin(@RequestBody @NonNull UserLoginRequestDto loginRequest) {
+    public ResponseEntity<String> userLogin(@Valid @RequestBody @NonNull UserLoginRequestDto loginRequest) {
         try {
             return ResponseEntity.ok(authenticationService.authenticateUser(loginRequest));
         }
@@ -49,7 +50,7 @@ public class UserController {
 
     @PreAuthorize("hasAnyRole('ADMIN','OWNER')")
     @PostMapping("/user/create")
-    public ResponseEntity<Object> createUser(@RequestBody CreateUserDto request){
+    public ResponseEntity<Object> createUser(@Valid @RequestBody CreateUserDto request){
         try {
             User response = appUserService.createUser(request);
             return ResponseEntity.ok(mapper.userToResponseDto(response));
@@ -60,7 +61,7 @@ public class UserController {
 
     @PreAuthorize("hasAnyRole('OWNER')")
     @PostMapping("/admin/create")
-    public ResponseEntity<Object> createAdmin(@RequestBody CreateUserDto request){
+    public ResponseEntity<Object> createAdmin(@Valid @RequestBody CreateUserDto request){
         try {
             User response = appUserService.createAdmin(request);
 

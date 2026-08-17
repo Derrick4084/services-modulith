@@ -14,6 +14,8 @@ import com.derocode.EcommApp.product.repositories.InventoryReservationRepository
 import com.derocode.EcommApp.product.repositories.ProductRepository;
 import lombok.AllArgsConstructor;
 import org.jspecify.annotations.NonNull;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -32,13 +34,14 @@ public class ProductService {
     private final ProductMapper mapper;
     private final InventoryReservationRepository inventoryRepository;
 
-    public Page<ProductResponseDto> getAll(int page, int size) {
-        if(size > 20){
-            size = 20;
-        }
+
+    @Cacheable(value = "pagedProducts", key = "'pagedProducts:' + #page + ':' + (#size > 20 ? 20 : #size)")
+    public Page<Product> getAll(int page, int size) {
+        size = Math.max(size, 20);
         Pageable pageable = PageRequest.of(page, size);
-        return productRepository.findAll(pageable).map(mapper::entityToResponse);
+        return productRepository.findAll(pageable);
     }
+
 
     public Product getProductByName(@NonNull String name) {
         Optional<Product> product = productRepository.getProductByName(name);
@@ -50,12 +53,20 @@ public class ProductService {
         }
     }
 
-    public Product getProductById(@NonNull Long id) {
-        return productRepository.getProductById(id).orElseThrow(
-                ()-> new SharedResourceNotFoundException("Product does not exists")
-        );
+
+    @Cacheable(value = "productsById", key = "#id")
+    public ProductResponseDto getProductById(@NonNull Long id) {
+
+        Product product = productRepository.getProductById(id)
+                .orElseThrow(() ->
+                        new SharedResourceNotFoundException("Product does not exist")
+                );
+
+        return mapper.entityToResponse(product);
     }
 
+
+    @CacheEvict(value = "pagedProducts", allEntries = true)
     public Product addNewProduct(@NonNull AddProductRequestDto addProductRequest) {
         Category category = categoryRepository.findByName(addProductRequest.category()).orElseThrow(()->
                 new SharedResourceNotFoundException("There is no category with that name")

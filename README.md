@@ -157,6 +157,8 @@ This prevents the application from degrading into a tightly coupled codebase.
 * Spring Security
 * Spring Data JPA
 * Spring Data MongoDB
+* Redis
+* Zipkin
 ### Databases
 * PostgreSQL
 * MongoDB / DocumentDB

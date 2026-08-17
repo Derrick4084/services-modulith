@@ -38,8 +38,8 @@ public class ProductControllerTest {
     @Autowired
     MockMvc mockMvc;
 
-    @MockitoBean
-    ProductMapperImpl productMapper;
+//    @MockitoBean
+//    ProductMapperImpl productMapper;
 
     @MockitoBean
     SharedJwtService jwtService;
@@ -54,7 +54,7 @@ public class ProductControllerTest {
     @Test
     void shouldReturnProduct() throws Exception {
 
-        when(productMapper.entityToResponse(productService.getProductById(70L))).thenReturn(new ProductResponseDto(
+        when(productService.getProductById(70L)).thenReturn(new ProductResponseDto(
                 70L,
             "Mechanical Keyboard 1",
             "Mechanical keyboard with RGB lighting",

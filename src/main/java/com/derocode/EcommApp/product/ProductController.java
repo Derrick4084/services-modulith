@@ -5,6 +5,7 @@ import com.derocode.EcommApp.product.api.AddProductRequestDto;
 import com.derocode.EcommApp.product.mappers.ProductMapperImpl;
 import com.derocode.EcommApp.product.models.Product;
 import com.derocode.EcommApp.product.services.ProductService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -21,19 +22,18 @@ public class ProductController {
 
     @GetMapping("/product/{id}")
     public ResponseEntity<ProductResponseDto> getProductById(@PathVariable Long id){
-        Product product = productService.getProductById(id);
-        return ResponseEntity.ok(productMapper.entityToResponse(product));
+        return ResponseEntity.ok(productService.getProductById(id));
     }
 
     @PostMapping("/product/add")
-    public ResponseEntity<ProductResponseDto> addProduct(@RequestBody AddProductRequestDto request){
+    public ResponseEntity<ProductResponseDto> addProduct(@Valid @RequestBody AddProductRequestDto request){
         Product product = productService.addNewProduct(request);
         return ResponseEntity.ok(productMapper.entityToResponse(product));
     }
 
     @GetMapping("/product/all")
     public ResponseEntity<Page<ProductResponseDto>> getAll(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size){
-        Page<ProductResponseDto> response = productService.getAll(page, size);
+        Page<ProductResponseDto> response = productService.getAll(page, size).map(productMapper::entityToResponse);
         return ResponseEntity.ok(response);
     }
 }

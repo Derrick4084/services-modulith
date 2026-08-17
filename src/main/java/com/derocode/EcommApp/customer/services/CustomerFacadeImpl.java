@@ -24,8 +24,7 @@ public class CustomerFacadeImpl implements CustomerFacade {
 
     @Override
     public CustomerResponseDto getCustomerByEmail(String email) {
-         Customer customer = customerService.getCustomerByEmail(email);
-         return customerMapper.entityToResponse(customer);
+        return customerService.getCustomerByEmail(email);
 
     }
 

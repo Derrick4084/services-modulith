@@ -11,10 +11,10 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class PaymentListener {
 
-    private final ShipmentEventHandlerService shipmentService;
+    private final ShipmentEventHandlerService eventHandlerService;
 
     @ApplicationModuleListener
     public void on(SharedPaymentEventDto event) {
-        shipmentService.handlePaymentEvent(event);
+        eventHandlerService.handlePaymentEvent(event);
     }
 }

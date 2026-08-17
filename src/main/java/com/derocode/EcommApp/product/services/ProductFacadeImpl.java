@@ -27,8 +27,8 @@ public class ProductFacadeImpl implements ProductFacade{
 
     @Override
     public ProductResponseDto getProductById(@NonNull Long id) {
-        Product product = productService.getProductById(id);
-        return productMapper.entityToResponse(product);
+        return productService.getProductById(id);
+
     }
 
     @Override

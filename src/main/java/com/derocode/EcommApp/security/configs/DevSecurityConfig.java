@@ -38,19 +38,20 @@ public class DevSecurityConfig {
                         .requestMatchers("/actuator/health").permitAll()
 
                         // Ai MCP tools
-                        .requestMatchers(HttpMethod.GET, "/customer/email/**").hasAnyRole("AI")
+
 
                         // Customer viewing
-                        .requestMatchers(HttpMethod.GET, "/customer/**").hasAnyRole("CUSTOMER", "USER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/customer/**").hasAnyRole("AI", "USER", "ADMIN")
 
                         // Customer management
                         .requestMatchers(HttpMethod.POST, "/customer/**").hasAnyRole("ADMIN", "OWNER")
                         .requestMatchers(HttpMethod.PUT, "/customer/**").hasAnyRole("ADMIN", "OWNER")
                         .requestMatchers(HttpMethod.DELETE, "/customer/**").hasAnyRole("ADMIN", "OWNER")
+                        .requestMatchers(HttpMethod.GET, "/customer/email/**").hasAnyRole("AI", "USER","ADMIN")
 
 
                         // Product viewing
-                        .requestMatchers(HttpMethod.GET, "/product/**").hasAnyRole("AI","CUSTOMER", "USER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/product/**").hasAnyRole("AI","CUSTOMER","USER","ADMIN")
                         // Product management
                         .requestMatchers(HttpMethod.POST, "/product/**").hasAnyRole("ADMIN", "OWNER")
                         .requestMatchers(HttpMethod.PUT, "/product/**").hasAnyRole("ADMIN", "OWNER")

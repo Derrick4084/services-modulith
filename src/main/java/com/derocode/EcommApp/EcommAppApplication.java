@@ -8,7 +8,7 @@ import org.springframework.cache.annotation.EnableCaching;
 @SpringBootApplication(exclude = {
 		MongoAutoConfiguration.class
 })
-//@EnableCaching
+@EnableCaching
 public class EcommAppApplication {
 
 	public static void main(String[] args) {

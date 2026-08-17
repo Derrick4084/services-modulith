@@ -3,6 +3,7 @@ package com.derocode.EcommApp.order;
 import com.derocode.EcommApp.customer.CustomerFacade;
 import com.derocode.EcommApp.order.mappers.OrderMapperImpl;
 import com.derocode.EcommApp.order.services.OrderService;
+import jakarta.validation.Valid;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +20,7 @@ public class OrderController {
     private final OrderMapperImpl orderMapper;
 
     @PostMapping("/order/create")
-    public ResponseEntity<Object> createOrder(@RequestBody @NonNull CreateOrderDto request){
+    public ResponseEntity<Object> createOrder(@Valid @RequestBody @NonNull CreateOrderDto request){
         if(!customerFacade.existsByEmail(request.customerEmail())) {
             return ResponseEntity.badRequest().body("No customer found to create this order");
         }
