@@ -21,7 +21,7 @@ ARG APP_VERSION=0.0.1
 WORKDIR /app
 COPY --from=build /build/target/EcommApp-*.jar /app/app.jar
 
-EXPOSE 8080
+EXPOSE 8079
 
 ENV SPRING_PROFILES_ACTIVE=prod
 

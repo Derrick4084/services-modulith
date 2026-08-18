@@ -8,14 +8,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
@@ -39,26 +37,28 @@ public class ProdSecurityConfig {
                         .requestMatchers("/actuator/health").permitAll()
 
                         // Customer viewing
-                        .requestMatchers(HttpMethod.GET, "/customer/**").hasAnyRole("CUSTOMER", "USER")
+                        .requestMatchers(HttpMethod.GET, "/customer/**").hasAnyRole("AI", "USER", "ADMIN")
 
                         // Customer management
                         .requestMatchers(HttpMethod.POST, "/customer/**").hasAnyRole("ADMIN", "OWNER")
                         .requestMatchers(HttpMethod.PUT, "/customer/**").hasAnyRole("ADMIN", "OWNER")
                         .requestMatchers(HttpMethod.DELETE, "/customer/**").hasAnyRole("ADMIN", "OWNER")
+                        .requestMatchers(HttpMethod.GET, "/customer/email/**").hasAnyRole("AI", "USER","ADMIN")
 
                         // Product viewing
-                        .requestMatchers(HttpMethod.GET, "/product/**").hasAnyRole("CUSTOMER", "USER","ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/product/**").hasAnyRole("AI","CUSTOMER","USER","ADMIN")
                         // Product management
                         .requestMatchers(HttpMethod.POST, "/product/**").hasAnyRole("ADMIN", "OWNER")
                         .requestMatchers(HttpMethod.PUT, "/product/**").hasAnyRole("ADMIN", "OWNER")
                         .requestMatchers(HttpMethod.DELETE, "/product/**").hasAnyRole("ADMIN", "OWNER")
 
                         // Cart
-                        .requestMatchers("/cart/**").hasAnyRole("CUSTOMER", "USER")
+                        .requestMatchers("/cart/*").hasAnyRole("AI", "CUSTOMER", "USER")
 
                         // Orders
-                        .requestMatchers(HttpMethod.POST, "/order/find/**").hasAnyRole("ADMIN","USER")
-                        .requestMatchers(HttpMethod.POST, "/order/create").hasRole("CUSTOMER")
+                        .requestMatchers(HttpMethod.GET, "/order/reference/**").hasAnyRole("AI","ADMIN","USER")
+                        .requestMatchers(HttpMethod.GET, "/order/id/**").hasAnyRole("AI","ADMIN","USER")
+                        .requestMatchers(HttpMethod.POST, "/order/create").hasAnyRole("AI", "CUSTOMER")
 
                         // Shipment
                         .requestMatchers("/shipment/**").hasAnyRole("ADMIN","USER")
@@ -66,6 +66,9 @@ public class ProdSecurityConfig {
                         // Admin area
                         .requestMatchers("/user/**").hasAnyRole("ADMIN", "OWNER")
                         .requestMatchers("/admin/**").hasAnyRole("ADMIN", "OWNER")
+
+                        .requestMatchers(HttpMethod.POST,"/rag/ingest").hasAnyRole("ADMIN", "OWNER")
+
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session ->

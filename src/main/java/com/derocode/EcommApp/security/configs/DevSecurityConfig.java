@@ -37,9 +37,6 @@ public class DevSecurityConfig {
                         .requestMatchers("/user/authenticate").permitAll()
                         .requestMatchers("/actuator/health").permitAll()
 
-                        // Ai MCP tools
-
-
                         // Customer viewing
                         .requestMatchers(HttpMethod.GET, "/customer/**").hasAnyRole("AI", "USER", "ADMIN")
 
@@ -48,7 +45,6 @@ public class DevSecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/customer/**").hasAnyRole("ADMIN", "OWNER")
                         .requestMatchers(HttpMethod.DELETE, "/customer/**").hasAnyRole("ADMIN", "OWNER")
                         .requestMatchers(HttpMethod.GET, "/customer/email/**").hasAnyRole("AI", "USER","ADMIN")
-
 
                         // Product viewing
                         .requestMatchers(HttpMethod.GET, "/product/**").hasAnyRole("AI","CUSTOMER","USER","ADMIN")
@@ -63,7 +59,6 @@ public class DevSecurityConfig {
                         // Orders
                         .requestMatchers(HttpMethod.GET, "/order/reference/**").hasAnyRole("AI","ADMIN","USER")
                         .requestMatchers(HttpMethod.GET, "/order/id/**").hasAnyRole("AI","ADMIN","USER")
-
                         .requestMatchers(HttpMethod.POST, "/order/create").hasAnyRole("AI", "CUSTOMER")
 
                         // Shipment
@@ -74,8 +69,6 @@ public class DevSecurityConfig {
                         .requestMatchers("/admin/**").hasAnyRole("ADMIN", "OWNER")
 
                         .requestMatchers(HttpMethod.POST,"/rag/ingest").hasAnyRole("ADMIN", "OWNER")
-
-
 
                         .anyRequest().authenticated()
                 )
