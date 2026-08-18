@@ -7,7 +7,7 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # Runtime
-FROM amazoncorretto:21-alpine
+FROM eclipse-temurin:25-jre
 
 # Install curl and CA certs
 RUN apk --no-cache add curl wget netcat-openbsd ca-certificates
