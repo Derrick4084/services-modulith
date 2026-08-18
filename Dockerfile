@@ -7,7 +7,7 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # Runtime
-FROM eclipse-temurin:25-jre
+FROM eclipse-temurin:25-jre-alpine
 
 # Install curl and CA certs
 RUN apk --no-cache add curl wget netcat-openbsd ca-certificates
